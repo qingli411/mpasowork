@@ -1,0 +1,24 @@
+#!/bin/bash
+
+mpaso_path="/home/qingli/models/MPAS-Model"
+
+# target="gfortran"
+# target="clean"
+target=$1
+
+# set env
+export NETCDF=/home/qingli/local/netcdf
+export PNETCDF=/home/qingli/local/pnetcdf
+export PIO=/home/qingli/local/pio
+export FFTW=/home/qingli/local/fftw
+export CUDA=/home/qingli/local/pgi/linux86-64/2019/cuda/10.1
+export PGI=/home/qingli/local/pgi/linux86-64/2019
+
+export LD_LIBRARY_PATH=$PGI/lib:$CUDA/lib64:$LD_LIBRARY_PATH
+
+cd ${mpaso_path}
+if [[ $2 == "debug" ]]; then
+    make ${target} CORE=ocean DEBUG=true USE_PIO2=true
+else
+    make ${target} CORE=ocean USE_PIO2=true
+fi
