@@ -8,12 +8,12 @@ export CONDA_PATH=${HOME}/miniconda3
 
 source ${CONDA_PATH}/etc/profile.d/conda.sh
 
-# conda create -y -n mpas -c conda-forge -c xylar python=3.7 \
-# geometric_features=0.1.3 mpas_tools=0.0.3 jigsaw=0.9.11 jigsawpy=0.0.2 \
-# metis pyflann scikit-image basemap pyamg ffmpeg netcdf-fortran mpich \
-# fortran-compiler cxx-compiler c-compiler m4 git cmake pyremap fftw
+conda create -y -n mpas -c conda-forge -c xylar python=3.7 \
+geometric_features=0.1.3 mpas_tools=0.0.3 jigsaw=0.9.11 jigsawpy=0.0.2 \
+metis pyflann scikit-image basemap pyamg ffmpeg netcdf-fortran mpich \
+fortran-compiler cxx-compiler c-compiler m4 git cmake pyremap fftw
 
-# conda activate mpas
+conda activate mpas
 
 # modify this
 export PREFIX="${CONDA_PATH}/envs/mpas"
@@ -25,18 +25,18 @@ export MPIF90=mpif90
 export LDFLAGS="-L${PREFIX}/lib"
 
 # install pnetcdf
-# rm -rf pnetcdf-${PNETCDF_VERSION}*
+rm -rf pnetcdf-${PNETCDF_VERSION}*
 
-# wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
+wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
 
-# tar xvf pnetcdf-${PNETCDF_VERSION}.tar.gz
-# cd pnetcdf-${PNETCDF_VERSION}
+tar xvf pnetcdf-${PNETCDF_VERSION}.tar.gz
+cd pnetcdf-${PNETCDF_VERSION}
 
-# ./configure --prefix=${PREFIX}
-# make
-# make install
+./configure --prefix=${PREFIX}
+make
+make install
 
-# cd ..
+cd ..
 
 # install pio
 rm -rf ParallelIO pio-${PIO_VERSION}
