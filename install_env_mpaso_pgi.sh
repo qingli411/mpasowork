@@ -5,6 +5,7 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 export PGI=${HOME}/local/pgi/linux86-64/2019
 export OPENMPI=${PGI}/mpi/openmpi-3.1.3
+export OPAL_PREFIX=${OPENMPI}
 export PATH=${PGI}/bin:${PATH}
 export PATH=${OPENMPI}/bin:${PATH}
 export LD_LIBRARY_PATH=${PGI}/lib::${LD_LIBRARY_PATH}
@@ -36,17 +37,18 @@ echo "Please download hdf5 source code (hdf5-${HDF5_VERSION}.tar.gz) from https:
 tar xvf hdf5-${HDF5_VERSION}.tar.gz
 cd hdf5-${HDF5_VERSION}
 CFLAGS="-fPIC -m64 -tp=px" CXXFLAGS="-fPIC -m64 -tp=px" FCFLAGS="-fPIC -m64 -tp=px" CC=mpicc CXX=mpic++ FC=mpif90 ./configure --with-zlib=${PREFIX} --enable-threadsafe --enable-cxx --enable-fortran --enable-unsupported --enable-parallel --prefix=${PREFIX}
-make
+export NPROCS=4
+make check
 make install
 cd ..
 rm -rf hdf5-${HDF5_VERSION}*
 
 # install pnetcdf
-PNETCDF_VERSION=1.12.1
+export PNETCDF_VERSION=1.12.1
 wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
 tar xvf pnetcdf-${PNETCDF_VERSION}.tar.gz
 cd pnetcdf-${PNETCDF_VERSION}
-CC=mpicc CFLAGS="-fPIC -m64 -tp=px" ./configure --prefix=${PREFIX}
+CC=mpicc CFLAGS="-fPIC -m64 -tp=px" ./configure --enable-shared --prefix=${PREFIX}
 make
 make install
 cd ..
@@ -77,15 +79,29 @@ cd ..
 rm -rf netcdf-fortran-${NETCDFC_VERSION}*
 
 # install pio
-export PIO_VERSION=2.5.0
-wget https://github.com/NCAR/ParallelIO/releases/download/pio2_5_0/pio-${PIO_VERSION}.tar.gz
-tar xvf pio-${PIO_VERSION}.tar.gz
+# note: building pio2 from source does not work for mpaso
+export PIO_VERSION=1.10.1
+rm -rf ParallelIO pio-${PIO_VERSION}
+git clone git@github.com:NCAR/ParallelIO.git
+cd ParallelIO
+git checkout pio${PIO_VERSION}
+cd pio
+export PIOSRC=`pwd`
+git clone https://github.com/PARALLELIO/genf90.git bin
+git clone https://github.com/CESM-Development/CMake_Fortran_utils.git cmake
+cd ../..
+export NETCDF=${PREFIX}
+export PNETCDF=${PREFIX}
+export FC=mpif90
+export CC=mpicc
+mkdir pio-${PIO_VERSION}
 cd pio-${PIO_VERSION}
-CC=mpicc FC=mpif90 FCFLAGS="-fPIC -m64 -tp=px" CFLAGS="-fPIC -m64 -tp=px" CPPFLAGS="-I${PREFIX}/include" LDFLAGS="-L${PREFIX}/lib" ./configure --enable-fortran --prefix=${PREFIX}
-make check
-make install
-cd ..
-rm -rf pio-${PIO_VERSION}*
+cmake -D NETCDF_C_DIR=${NETCDF} -D NETCDF_Fortran_DIR=${NETCDF} \
+-D PNETCDF_DIR=${PNETCDF} -D CMAKE_VERBOSE_MAKEFILE=1 \
+-D CMAKE_INSTALL_PREFIX=${PREFIX} ${PIOSRC}
+make
+cp *.h *.mod ${PREFIX}/include
+cp *.a ${PREFIX}/lib
 
 # install fftw
 export FFTW_VERSION=3.3.8
@@ -95,5 +111,7 @@ cd fftw-${FFTW_VERSION}
 CC=pgcc FC=pgf90 ./configure --prefix=${PREFIX}
 make
 make install
+cd ..
+rm -rf fftw-${FFTW_VERSION}*
 
 
