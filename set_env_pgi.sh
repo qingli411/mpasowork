@@ -15,3 +15,4 @@ export LD_LIBRARY_PATH=${ENV_MPAS_PGI}/lib:${OPENMPI}/lib:${PGI}/lib:${CUDA}/lib
 
 export CORE=ocean
 export AUTOCLEAN=true
+export USE_PIO2=false

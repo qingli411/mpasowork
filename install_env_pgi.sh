@@ -29,7 +29,6 @@ cd zlib-${ZLIB_VERSION}
 make
 make install
 cd ..
-rm -rf zlib-${ZLIB_VERSION}*
 
 # install hdf5
 export HDF5_VERSION=1.10.6
@@ -41,7 +40,6 @@ export NPROCS=4
 make check
 make install
 cd ..
-rm -rf hdf5-${HDF5_VERSION}*
 
 # install pnetcdf
 export PNETCDF_VERSION=1.12.1
@@ -52,7 +50,6 @@ CC=mpicc CFLAGS="-fPIC -m64 -tp=px" ./configure --enable-shared --prefix=${PREFI
 make
 make install
 cd ..
-rm -rf pnetcdf-${PNETCDF_VERSION}*
 
 export LD_LIBRARY_PATH=${PREFIX}/lib:${LD_LIBRARY_PATH}
 
@@ -65,7 +62,6 @@ CC=mpicc CFLAGS="-fPIC -m64 -tp=px" CPPFLAGS="-I${PREFIX}/include" LDFLAGS="-L${
 make check
 make install
 cd ..
-rm -rf netcdf-c-${NETCDFC_VERSION}*
 
 # install netcdf-fortran
 export NETCDFF_VERSION=4.5.2
@@ -76,10 +72,9 @@ CC=mpicc FC=mpif90 F77=mpif77 FCFLAGS="-fPIC -m64 -tp=px" CFLAGS="-fPIC -m64 -tp
 make check
 make install
 cd ..
-rm -rf netcdf-fortran-${NETCDFC_VERSION}*
 
-# install pio
-# note: building pio2 from source does not work for mpaso
+install pio
+note: building pio2 from source does not work for mpaso
 export PIO_VERSION=1.10.1
 rm -rf ParallelIO pio-${PIO_VERSION}
 git clone git@github.com:NCAR/ParallelIO.git
@@ -112,6 +107,13 @@ CC=pgcc FC=pgf90 ./configure --prefix=${PREFIX}
 make
 make install
 cd ..
-rm -rf fftw-${FFTW_VERSION}*
 
+# clean up tarballs
+rm -rf zlib-${ZLIB_VERSION}*
+rm -rf hdf5-${HDF5_VERSION}*
+rm -rf pnetcdf-${PNETCDF_VERSION}*
+rm -rf netcdf-c-${NETCDFC_VERSION}*
+rm -rf netcdf-fortran-${NETCDFC_VERSION}*
+rm -rf ParallelIO pio-${PIO_VERSION}
+rm -rf fftw-${FFTW_VERSION}*
 
