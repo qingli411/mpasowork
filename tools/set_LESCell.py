@@ -102,13 +102,13 @@ else:
 print('')
 
 # check graph partitioning for the les cells
-print('\nChecking graph partitioning...')
-print('----------------')
 if args.fgraph is not None:
+    print('\nChecking graph partitioning...')
+    print('----------------')
     gpdata = np.loadtxt(args.fgraph)
     for i in np.arange(cidx.size):
         print('Cell ID: {:d}, Partitioning: {:4d}'.format(idLESCells[i], int(gpdata[idLESCells[i]-1])))
-print('')
+    print('')
 
 # save lesCell
 lesCell_local[cidx] = 1
