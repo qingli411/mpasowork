@@ -28,6 +28,8 @@ parser.add_argument('-x', '--xlocation', action='store', dest='xloc',
 parser.add_argument('-y', '--ylocation', action='store', dest='yloc',
         metavar='YLOCATION', nargs='+',
         help='List of y locations in fraction (0, 1). Only used when type is \'location\'.')
+parser.add_argument('-g', '--graphpart', action='store', dest='fgraph',
+        help='Graph partitioning for the MPAS grid.')
 parser.add_argument('--version', action='version', version='%(prog)s: 1.0')
 # parsing arguments and save to args
 args=parser.parse_args()
@@ -41,6 +43,7 @@ yCell = fin.variables['yCell'][:]
 nCells = len(fin.dimensions['nCells'])
 indexToCellID = fin.variables['indexToCellID'][:]
 
+# read or create lesCell
 if 'lesCell' in fin.variables:
   lesCell = fin.variables['lesCell']
 else:
@@ -48,13 +51,19 @@ else:
 
 lesCell_local = np.zeros( (nCells,) )
 
+# find the cells
+print('\nFinding LES Cell...')
+print('----------------')
 if args.type == 'cellid':
     assert args.cellid is not None, 'Cell ID is required when input type is \'cellid\'.'
+    idx = []
     for cellID in args.cellid:
-        lesCell_local[int(cellID)-1] = 1
+        idx.append(int(cellID)-1)
         print('Cell ID: {:s}'.format(cellID))
         # for test
         # print(indexToCellID[int(cellID)-1])
+    cidx = np.array(idx)
+    idLESCells = indexToCellID[cidx]
 elif args.type == 'location':
     assert args.xloc is not None, 'List of x locations is required when input type is \'location\'.'
     assert args.yloc is not None, 'List of y locations is required when input type is \'location\'.'
@@ -78,7 +87,6 @@ elif args.type == 'location':
     tree = spatial.KDTree(list(zip(xCell, yCell)))
     p = tree.query(pts)
     cidx = p[1]
-    lesCell_local[cidx] = 1
     # list of indices
     idLESCells = indexToCellID[cidx]
     xLESCells = xCell[cidx]
@@ -91,7 +99,19 @@ elif args.type == 'location':
         # print('{:6.4f} {:6.4f}'.format((xCell[cidx[i]]-xCellMin)/(xCellMax-xCellMin), (yCell[cidx[i]]-yCellMin)/(yCellMax-yCellMin)))
 else:
     raise ValueError('Input type should be either \'cellid\' or \'location\'.')
+print('')
 
+# check graph partitioning for the les cells
+print('\nChecking graph partitioning...')
+print('----------------')
+if args.fgraph is not None:
+    gpdata = np.loadtxt(args.fgraph)
+    for i in np.arange(cidx.size):
+        print('Cell ID: {:d}, Partitioning: {:4d}'.format(idLESCells[i], int(gpdata[idLESCells[i]-1])))
+print('')
+
+# save lesCell
+lesCell_local[cidx] = 1
 lesCell[:] = lesCell_local
 
 fin.close()
