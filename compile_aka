@@ -16,9 +16,15 @@ export PGI=/home/qingli/local/pgi/linux86-64/2019
 
 export LD_LIBRARY_PATH=$PGI/lib:$CUDA/lib64:$LD_LIBRARY_PATH
 
-cd ${mpaso_path}
+export AUTOCLEAN=true
+export CORE=ocean
+export USE_PIO2=false
+
 if [[ $2 == "debug" ]]; then
-    make ${target} CORE=ocean DEBUG=true USE_PIO2=true
+    export DEBUG=true
 else
-    make ${target} CORE=ocean USE_PIO2=true
+    export DEBUG=false
 fi
+
+cd ${mpaso_path}
+make ${target}
