@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mpaso_path=${HOME}/models/mpas/MPAS-Model
+mpaso_path=../MPAS-Model
 
 # target="gfortran"
 # target="clean"

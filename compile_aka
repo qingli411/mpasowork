@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mpaso_path="/home/qingli/models/MPAS-Model"
+mpaso_path="../MPAS-Model"
 
 # target="gfortran"
 # target="clean"
