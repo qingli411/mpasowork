@@ -27,6 +27,8 @@ export FFTW=$(dirname $(dirname $(which fftw-wisdom)))
 echo "FFTW is set to ${FFTW}"
 export CUDA=$(dirname $(dirname $(which cuda-gdb)))
 echo "CUDA is set to ${CUDA}"
+export PGI=$(dirname $(dirname $(which pgcc)))
+echo "PGI is set to ${PGI}"
 
 # PIO1 is built by the script 'install_env_mpaso_summit.sh', PIO2 module on summit doesn't seem to work
 export PIO="${HOME}/local/pio-1.10.1"
