@@ -1,0 +1,26 @@
+#!/bin/bash
+
+export FFLAGS="-fPIC -O3 -byteswapio -Mfree"
+export LIBS="-L${NETCDF}/lib -lnetcdf -lnetcdff -L${PNETCDF}/lib -lpnetcdf -L${PIO}/lib -lpio"
+export INCLUDES="-I${NETCDF}/include -I${PNETCDF}/include -I${PIO}/include"
+echo ${LIBS}
+echo ${INCLUDES}
+
+cat > pio1.f90 << EOF
+program pio1
+    use pio
+    use pionfatt_mod
+    integer, parameter :: MPAS_IO_OFFSET_KIND = PIO_OFFSET
+    integer, parameter :: MPAS_INT_FILLVAL = NF_FILL_INT
+end program
+EOF
+mpif90 pio1.f90 ${FFLAGS} ${LIBS} ${INCLUDES} -o pio1.out
+
+cat > pio2.f90 << EOF
+program pio2
+    use pio
+    integer, parameter :: MPAS_IO_OFFSET_KIND = PIO_OFFSET_KIND
+    integer, parameter :: MPAS_INT_FILLVAL = PIO_FILL_INT
+end program
+EOF
+mpif90 pio2.f90 ${FFLAGS} ${LIBS} ${INCLUDES} -o pio2.out
