@@ -1,19 +1,13 @@
 #!/bin/bash
-# This script build environment for MPAS using PGI
+# This script build environment for MPAS on Darwin using PGI
 #
-# PGI can be downloaded from https://www.pgroup.com/products/community.html
 
 # exit when any command fails
 set -e
 
 # load pgi
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-export PGI=${HOME}/local/pgi/linux86-64/2019
-export OPENMPI=${PGI}/mpi/openmpi-3.1.3
-export OPAL_PREFIX=${OPENMPI}
-export PATH=${PGI}/bin:${PATH}
-export PATH=${OPENMPI}/bin:${PATH}
-export LD_LIBRARY_PATH=${PGI}/lib::${LD_LIBRARY_PATH}
+module load pgi/18.10
+module load openmpi/3.1.3-pgi_18.10
 
 export CC=pgcc
 export FC=pgf90
@@ -92,7 +86,6 @@ function install_netcdff() {
 
 function install_pio() {
     # install pio
-    # note: building pio2 from source does not work for mpaso
     export PIO_VERSION=1.10.1
     rm -rf ParallelIO pio-${PIO_VERSION}
     git clone git@github.com:NCAR/ParallelIO.git
