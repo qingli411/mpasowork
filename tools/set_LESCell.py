@@ -54,7 +54,13 @@ lesCell_local = np.zeros( (nCells,) )
 # find the cells
 print('\nFinding LES Cell...')
 print('----------------')
-if args.type == 'cellid':
+if args.type == 'all':
+    idx = [i for i in np.arange(nCells)]
+    cidx = np.array(idx)
+    idLESCells = indexToCellID[cidx]
+    print('Using all cells')
+    print(indexToCellID)
+elif args.type == 'cellid':
     assert args.cellid is not None, 'Cell ID is required when input type is \'cellid\'.'
     idx = []
     for cellID in args.cellid:
