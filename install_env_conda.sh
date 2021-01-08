@@ -12,7 +12,7 @@ source ${CONDA_PATH}/etc/profile.d/conda.sh
 
 function install_mpas_env() {
     conda create -y -n mpas -c conda-forge -c xylar python=3.7 \
-    geometric_features=0.1.4 mpas_tools=0.0.6 jigsaw=0.9.12 jigsawpy \
+    geometric_features mpas_tools jigsaw jigsawpy \
     metis pyflann scikit-image basemap pyamg ffmpeg netcdf-fortran mpich \
     fortran-compiler cxx-compiler c-compiler m4 git cmake pyremap fftw
 }
@@ -70,7 +70,7 @@ function install_pio() {
     cd ..
 }
 
-# install_mpas_env
+install_mpas_env
 
 conda activate mpas
 
@@ -83,6 +83,6 @@ export MPIF77=mpif77
 export MPIF90=mpif90
 export LDFLAGS="-L${PREFIX}/lib"
 
-# install_pnetcdf
+install_pnetcdf
 
 install_pio
