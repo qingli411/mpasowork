@@ -1,0 +1,28 @@
+#!/bin/bash
+
+mpaso_path=../MPAS-Model
+
+# target="gfortran"
+# target="clean"
+target=$1
+
+# set env
+export PREFIX="${HOME}/miniforge3/envs/mpas"
+export MPAS_EXTERNAL_LIBS="-L${PREFIX}/lib -lnetcdff"
+export NETCDF=$(nc-config --prefix)
+export NETCDFF=$(nf-config --prefix)
+export PNETCDF=${PREFIX}
+export PIO=${PREFIX}
+export FFTW=${PREFIX}
+export AUTOCLEAN=true
+export CORE=ocean
+export USE_PIO2=false
+
+if [[ $2 == "debug" ]]; then
+    export DEBUG=true
+else
+    export DEBUG=false
+fi
+
+cd ${mpaso_path}
+make ${target}
