@@ -11,10 +11,7 @@ export CONDA_PATH=${HOME}/miniconda3
 source ${CONDA_PATH}/etc/profile.d/conda.sh
 
 function install_mpas_env() {
-    conda create -y -n mpas -c conda-forge -c xylar python=3.7 \
-    geometric_features mpas_tools jigsaw jigsawpy \
-    metis pyflann scikit-image basemap pyamg ffmpeg netcdf-fortran mpich \
-    fortran-compiler cxx-compiler c-compiler m4 git cmake pyremap fftw
+    conda create -y -n mpas python=3.8 mpich fortran-compiler cxx-compiler c-compiler m4 git cmake six netcdf4 xarray matplotlib metis mpas_tools
 }
 
 function install_pnetcdf() {
