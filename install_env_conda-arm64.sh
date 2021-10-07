@@ -4,6 +4,7 @@ set -e
 
 export PNETCDF_VERSION=1.12.2
 export PIO_VERSION=1.10.1
+export DARWIN_VERSION=$(uname -v | awk '{print $4}' | sed 's/://')
 
 # modify this to fit your system
 export CONDA_PATH=${HOME}/miniforge3
@@ -22,7 +23,7 @@ function install_pnetcdf() {
     fi
     cd pnetcdf-${PNETCDF_VERSION}
 
-    ./configure --prefix=${PREFIX} --build=aarch64-apple-darwin20.5.0 --host=aarch64-apple-darwin20.5.0
+    ./configure --prefix=${PREFIX} --build=aarch64-apple-darwin${DARWIN_VERSION} --host=aarch64-apple-darwin${DARWIN_VERSION}
     make
     make install
 
@@ -54,7 +55,7 @@ function install_pio() {
     cd ..
 
     export NETCDF=$(nc-config --prefix)
-    export NETCDFF=$(nf-config --prefix)
+    export NETCDFF=${NETCDF}
     export PNETCDF=${PREFIX}
     export PHDF5=${PREFIX}
     export MPIROOT=${PREFIX}
@@ -76,6 +77,19 @@ function install_pio() {
     rm -rf ParallelIO
 }
 
+function install_mpas_tool() {
+    if [[ ! -d ${PREFIX}/MPAS-Tools ]]; then
+        git clone git@github.com:MPAS-Dev/MPAS-Tools.git ${PREFIX}/MPAS-Tools
+    fi
+    cd ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools
+    make
+    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasCellCuller.x ${PREFIX}/bin/
+    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasMaskCreator.x ${PREFIX}/bin/
+    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasMeshConverter.x ${PREFIX}/bin/
+    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/planar_hex/planar_hex ${PREFIX}/bin/
+    cd ..
+}
+
 install_mpas_env
 
 conda activate mpas
@@ -92,3 +106,5 @@ export LDFLAGS="-L${PREFIX}/lib"
 install_pnetcdf
 
 install_pio
+
+install_mpas_tool

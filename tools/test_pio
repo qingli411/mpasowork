@@ -1,6 +1,11 @@
 #!/bin/bash
 
-export FFLAGS="-fPIC -O3 -byteswapio -Mfree"
+# pgi
+# export FFLAGS="-fPIC -O3 -byteswapio -Mfree"
+
+# gfortran arm64
+export FFLAGS="-O3 -march=armv8.5-a -ffree-line-length-none -fconvert=big-endian -ffree-form -w -fallow-argument-mismatch"
+
 export LIBS="-L${NETCDF}/lib -lnetcdf -lnetcdff -L${PNETCDF}/lib -lpnetcdf -L${PIO}/lib -lpio"
 export INCLUDES="-I${NETCDF}/include -I${PNETCDF}/include -I${PIO}/include"
 echo ${LIBS}
