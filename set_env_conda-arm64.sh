@@ -7,6 +7,7 @@ export NETCDF="/opt/homebrew/Cellar/netcdf/4.8.0_2"
 export NETCDFF="/opt/homebrew/Cellar/netcdf/4.8.0_2"
 export PNETCDF=${PREFIX}
 export PIO=${PREFIX}
+export FFTW=${PREFIX}
 
 export CORE=ocean
 export AUTOCLEAN=true
