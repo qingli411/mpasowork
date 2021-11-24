@@ -1,4 +1,4 @@
-conda activate mpas
+#conda activate mpas
 export PREFIX="${HOME}/miniconda3/envs/mpas"
 export MPAS_EXTERNAL_LIBS="-L${PREFIX}/lib -lnetcdff"
 export NETCDF=${PREFIX}

@@ -7,18 +7,7 @@ mpaso_path=../MPAS-Model
 target=$1
 
 # set env
-export PREFIX="${HOME}/miniforge3/envs/mpas"
-export MPAS_EXTERNAL_LIBS="-L${PREFIX}/lib -lnetcdff"
-# export NETCDF=$(nc-config --prefix)
-# export NETCDFF=$(nf-config --prefix)
-export NETCDF="/opt/homebrew/Cellar/netcdf/4.8.0_2"
-export NETCDFF="/opt/homebrew/Cellar/netcdf/4.8.0_2"
-export PNETCDF=${PREFIX}
-export PIO=${PREFIX}
-export FFTW=${PREFIX}
-export AUTOCLEAN=true
-export CORE=ocean
-export USE_PIO2=false
+source ./set_env_conda-arm64.sh
 
 if [[ $2 == "debug" ]]; then
     export DEBUG=true
