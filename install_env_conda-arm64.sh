@@ -12,7 +12,7 @@ export CONDA_PATH=${HOME}/miniforge3
 source ${CONDA_PATH}/etc/profile.d/conda.sh
 
 function install_mpas_env() {
-    conda create -y -n mpas python=3.8 mpich fortran-compiler cxx-compiler c-compiler m4 git cmake six netcdf4 netcdf-fortran xarray matplotlib metis cartopy geometric_features pyevtk scikit-image pytest fftw
+    conda create -y -n mpas python=3.8 mpich fortran-compiler cxx-compiler c-compiler m4 git cmake six netcdf4 netcdf-fortran xarray matplotlib metis cartopy geometric_features pyevtk scikit-image pytest fftw mpas_tools
 }
 
 function install_pnetcdf() {
@@ -77,19 +77,6 @@ function install_pio() {
     rm -rf ParallelIO
 }
 
-function install_mpas_tool() {
-    if [[ ! -d ${PREFIX}/MPAS-Tools ]]; then
-        git clone https://github.com/MPAS-Dev/MPAS-Tools.git ${PREFIX}/MPAS-Tools
-    fi
-    cd ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools
-    make
-    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasCellCuller.x ${PREFIX}/bin/
-    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasMaskCreator.x ${PREFIX}/bin/
-    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools/MpasMeshConverter.x ${PREFIX}/bin/
-    ln -sf ${PREFIX}/MPAS-Tools/mesh_tools/planar_hex/planar_hex ${PREFIX}/bin/
-    cd ..
-}
-
 install_mpas_env
 
 conda activate mpas
@@ -106,5 +93,3 @@ export LDFLAGS="-L${PREFIX}/lib"
 install_pnetcdf
 
 install_pio
-
-install_mpas_tool
