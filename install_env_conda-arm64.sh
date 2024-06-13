@@ -12,7 +12,7 @@ export CONDA_PATH=${HOME}/miniforge3
 source ${CONDA_PATH}/etc/profile.d/conda.sh
 
 function install_mpas_env() {
-    conda create -y -n mpas python=3.8 mpich fortran-compiler cxx-compiler c-compiler m4 git cmake six netcdf4 netcdf-fortran xarray matplotlib metis cartopy geometric_features pyevtk pythong-igraph scikit-image pytest fftw
+    conda create -y -n mpas python=3.8 mpich fortran-compiler cxx-compiler c-compiler m4 git cmake six netcdf4 netcdf-fortran xarray matplotlib metis cartopy geometric_features pyevtk scikit-image pytest fftw
 }
 
 function install_pnetcdf() {
@@ -34,7 +34,7 @@ function install_pnetcdf() {
 function install_pio() {
     # install pio
     if [[ ! -d ParallelIO ]]; then
-        git clone git@github.com:NCAR/ParallelIO.git
+        git clone https://github.com/NCAR/ParallelIO.git
     fi
     cd ParallelIO
     # git checkout pio${PIO_VERSION//./_}
@@ -79,7 +79,7 @@ function install_pio() {
 
 function install_mpas_tool() {
     if [[ ! -d ${PREFIX}/MPAS-Tools ]]; then
-        git clone git@github.com:MPAS-Dev/MPAS-Tools.git ${PREFIX}/MPAS-Tools
+        git clone https://github.com/MPAS-Dev/MPAS-Tools.git ${PREFIX}/MPAS-Tools
     fi
     cd ${PREFIX}/MPAS-Tools/mesh_tools/mesh_conversion_tools
     make
